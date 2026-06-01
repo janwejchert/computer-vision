@@ -4,3 +4,5 @@ runs/
 dataset_*/
 *.pyc
 __pycache__/
+
+results/rfdetr/*.pth
