@@ -35,32 +35,13 @@ All training is done, the report is written, the PDF is generated. Open `REPORT.
 
 ## 4. Regenerating the PDF after editing REPORT.md
 
-The PDF is built from REPORT.md by weasyprint with a small inline stylesheet. To regenerate after edits, run from the project root:
+The PDF is built from REPORT.md through LaTeX (pandoc -> tectonic). To regenerate after edits, run from the project root:
 
 ```bash
-python3 - <<'EOF'
-import markdown, pathlib
-from weasyprint import HTML, CSS
-src = pathlib.Path('REPORT.md').read_text()
-html = markdown.markdown(src, extensions=['tables','fenced_code','attr_list','toc'])
-CSS_TEXT = """@page {size:A4; margin:2.2cm 2cm; @bottom-center {content: counter(page) " / " counter(pages); font-size:9pt; color:#777;}}
-body {font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; color:#1a1a1a; font-size:10.5pt; line-height:1.45;}
-h1 {font-size:22pt; margin:0 0 0.4em; border-bottom:2px solid #555; padding-bottom:6px;}
-h2 {font-size:15pt; margin-top:1.6em; border-bottom:1px solid #ccc; padding-bottom:4px; page-break-after:avoid;}
-h3 {font-size:12pt; margin-top:1.1em; page-break-after:avoid;}
-p {margin:0.55em 0; text-align:justify;}
-table {border-collapse:collapse; margin:0.9em 0; width:100%; font-size:9.5pt; page-break-inside:avoid;}
-th,td {border:1px solid #ccc; padding:5px 8px; text-align:left; vertical-align:top;}
-th {background:#f3f3f3; font-weight:600;} tr:nth-child(even) td {background:#fafafa;}
-img {max-width:100%; height:auto; margin:0.6em auto; display:block; page-break-inside:avoid;}
-code {background:#f0f0f0; padding:1px 4px; border-radius:3px; font-size:9.5pt; font-family:"Menlo",monospace;}
-ul,ol {margin:0.4em 0; padding-left:1.5em;} li {margin:0.15em 0;}
-hr {border:none; border-top:1px solid #ccc; margin:1.4em 0;}
-a {color:#1a5fb4; text-decoration:none;}"""
-HTML(string=f'<!doctype html><html><body>{html}</body></html>', base_url='.').write_pdf('REPORT.pdf', stylesheets=[CSS(string=CSS_TEXT)])
-print('Wrote REPORT.pdf')
-EOF
+./build_report.sh
 ```
+
+This writes two artefacts: `REPORT.pdf` (the deliverable) and `REPORT.tex` (the LaTeX intermediate, useful for inspecting how pandoc translates the markdown). Toolchain: `pandoc 3.9` + `tectonic` (both `brew install`-able). Old weasyprint-based recipe is retired.
 
 ## 5. Things that might need a look tomorrow
 
